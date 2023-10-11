@@ -1,7 +1,61 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import gsap from "gsap";
-// Initialize Three.js scene
+
+const countDown = document.getElementById("countdown");
+
+//animate the countdown
+
+const tl = gsap.timeline({ defaults: { ease: "power1.out" } });
+
+tl.to(".text", { y: "0%", duration: 1, stagger: 0.25 });
+tl.to(".slider", { y: "-100%", duration: 1.5, delay: 0.5 });
+tl.to(".intro", { y: "-100%", duration: 1 }, "-=1");
+tl.fromTo(
+  ".container",
+  { opacity: 0 },
+  { opacity: 1, duration: 1, delay: 0.5 }
+);
+
+function countdown() {
+  const second = 1000,
+    minute = second * 60,
+    hour = minute * 60,
+    day = hour * 24;
+
+  let today = new Date(),
+    dd = String(today.getDate()).padStart(2, "0"),
+    mm = String(today.getMonth() + 1).padStart(2, "0"),
+    yyyy = today.getFullYear(),
+    nextYear = yyyy + 1,
+    dayMonth = "01/09/",
+    birthday = dayMonth + yyyy;
+
+  today = mm + "/" + dd + "/" + yyyy;
+  if (today > birthday) {
+    birthday = dayMonth + nextYear;
+  }
+  //end
+
+  const countDown = new Date(birthday).getTime(),
+    x = setInterval(function () {
+      const now = new Date().getTime(),
+        distance = countDown - now;
+
+      (document.getElementById("days").innerText = Math.floor(distance / day)),
+        (document.getElementById("hours").innerText = Math.floor(
+          (distance % day) / hour
+        )),
+        (document.getElementById("minutes").innerText = Math.floor(
+          (distance % hour) / minute
+        )),
+        (document.getElementById("seconds").innerText = Math.floor(
+          (distance % minute) / second
+        ));
+    }, 0);
+}
+
+countdown();
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -15,11 +69,24 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.getElementById("container").appendChild(renderer.domElement);
 
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  renderer.render(scene, camera);
+}
+
+window.addEventListener("resize", onWindowResize, false);
+
+//scene background
+scene.background = new THREE.Color(0x020618);
+
 const loader = new GLTFLoader();
 // full light
-// const amblight = new THREE.AmbientLight(0xffffff, 0.9);
-// amblight.castShadow = true;
-// scene.add(amblight);
+const amblight = new THREE.AmbientLight(0x79668a, 5);
+amblight.position.set(0, 0, 0);
+scene.add(amblight);
 
 const robotMessage = document.createElement("div");
 robotMessage.classList.add("robotMessage");
@@ -28,90 +95,92 @@ robotMessage.innerHTML = "Take me near the moon";
 // //directional
 const directionalLight = new THREE.DirectionalLight(0xffffff, 5);
 directionalLight.castShadow = true;
-directionalLight.position.set(0, 32, 64);
+directionalLight.position.set(5, 10, 7.5);
+scene.add(directionalLight);
 
-// Create a point light
-const light = new THREE.PointLight(0xffffff, 500, 0);
-light.position.set(0, 6, 2); // Adjust the position as needed
-scene.add(light);
-
-// Set the initial state for the blinking effect
-let isLightOn = true;
-
-// Function to toggle the light on/off in a blinking pattern
-function toggleLight() {
-  isLightOn = !isLightOn;
-  light.visible = isLightOn;
-
-  // Define the interval for the blinking pattern (e.g., 1 second on, 1 second off)
-  const interval = isLightOn ? 1000 : 1000; // Adjust the duration as needed
-
-  setTimeout(toggleLight, interval);
-}
-
-// Start the blinking pattern
-toggleLight();
+const hemisphereLight = new THREE.HemisphereLight("#00aaff", "#fedb95", 5);
+hemisphereLight.position.set(0, 7, -0.3);
+scene.add(hemisphereLight);
 
 let model;
 let model2;
-let moon;
 let mixer;
 
-moon = new THREE.Mesh(
-  new THREE.SphereGeometry(0.4, 32, 32),
-  new THREE.MeshBasicMaterial({ color: 0xffffff })
-);
-moon.position.set(-20, 20, -10);
-gsap.to(moon.position, {
-  duration: 2,
-  x: 0,
-  y: 3,
-  z: 0,
-  ease: "inOut",
-});
-
-//texture
-const textureLoader = new THREE.TextureLoader();
-const texture = textureLoader.load("./models/moon.jpeg");
-moon.material.map = texture;
-scene.add(moon);
-
 // Load your custom GLTF model
-loader.load("./models/coming_soon.gltf", (gltf) => {
-  model = gltf.scene;
+if (window.innerWidth > 1000) {
+  loader.load("./models/coming_soon.gltf", (gltf) => {
+    model = gltf.scene;
 
-  const bbox = new THREE.Box3().setFromObject(model);
-  const center = new THREE.Vector3();
-  scene.add(model);
-  bbox.getCenter(center);
+    const bbox = new THREE.Box3().setFromObject(model);
+    const center = new THREE.Vector3();
+    scene.add(model);
+    bbox.getCenter(center);
 
-  // Calculate the offset needed to move the model to the center of the scene
-  const offset = new THREE.Vector3();
-  offset.subVectors(scene.position, center);
+    // Calculate the offset needed to move the model to the center of the scene
+    const offset = new THREE.Vector3();
+    offset.subVectors(scene.position, center);
 
-  // Apply the offset to the model's position
-  model.position.add(offset);
+    // Apply the offset to the model's position
+    model.position.add(offset);
 
-  //make it a bit down
-  model.position.y = -2;
+    //make it a bit down
+    model.position.y = -2;
+  });
+}
+
+const eyeGlowMaterial = new THREE.ShaderMaterial({
+  uniforms: {
+    glowColor: { value: new THREE.Color(0x11b4f8) }, // Change the color as needed
+    coefficient: { value: 1.3 },
+  },
+  vertexShader: `
+        uniform float coefficient;
+        void main() {
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+    `,
+  fragmentShader: `
+        uniform vec3 glowColor;
+        uniform float coefficient;
+        void main() {
+            vec3 glow = glowColor * coefficient;
+            gl_FragColor = vec4(glow, 1.0);
+        }
+    `,
+  blending: THREE.AdditiveBlending,
+  transparent: true,
 });
 
-loader.load("./models/ICT_HI.gltf", (gltf) => {
+loader.load("./models/robot.gltf", (gltf) => {
   model2 = gltf.scene;
   scene.add(model2);
 
   mixer = new THREE.AnimationMixer(model2);
+
+  model2.traverse((o) => {
+    if (o.isMesh) {
+      if (o.name === "eyes") {
+        //glow effect
+        //bloomPass
+
+        o.material = eyeGlowMaterial;
+      }
+    }
+  });
 
   gltf.animations.forEach((clip) => {
     mixer.clipAction(clip).play();
   });
 
   model2.position.set(-18, -7, -10);
-  model2.rotation.y = 0.5;
-  model2.scale.set(1, 1, 1);
-
+  model2.rotation.y = 0;
+  if (window.innerWidth > 500) {
+    model2.scale.set(1.2, 1.2, 1.2);
+  } else {
+    model2.scale.set(0.8, 0.8, 0.8);
+  }
   // Define variables for robot's position, orientation, and velocity
-  const robotPosition = new THREE.Vector3(0, -20, -10);
+  const robotPosition = new THREE.Vector3(-12, -20, -10);
   const robotOrientation = new THREE.Quaternion();
   const robotVelocity = new THREE.Vector3(0, 0, 0);
 
@@ -121,7 +190,6 @@ loader.load("./models/ICT_HI.gltf", (gltf) => {
 
   document.addEventListener("keydown", (event) => {
     const robotSpeed = 0.1; // Adjust the speed as needed
-    const rotateSpeed = 0.05; // Adjust the rotation speed as needed
     const resetKey = 32; // Space key
 
     switch (event.keyCode) {
@@ -158,7 +226,7 @@ loader.load("./models/ICT_HI.gltf", (gltf) => {
         // Reset robot position, orientation, and velocity to initial values when Space key is pressed
         gsap.to(robotPosition, {
           duration: 1,
-          x: 0,
+          x: -12,
           y: -2,
           z: -10,
           onUpdate: () => {
@@ -176,41 +244,17 @@ loader.load("./models/ICT_HI.gltf", (gltf) => {
 
         break;
     }
-
-    //if the robots position is near the moon, then move the moon
-    const distance = model2.position.distanceTo(moon.position);
-    console.log(distance);
-
-    if (distance < 10.5) {
-      document.getElementById("message").style.display = "flex";
-      //reset the robot
-      gsap.to(robotPosition, {
-        duration: 1,
-        x: 0,
-        y: -2,
-        z: -10,
-        onUpdate: () => {
-          model2.position.copy(robotPosition);
-        },
-        onComplete: () => {
-          robotVelocity.set(0, 0, 0);
-          gsap.to(model2.rotation, {
-            duration: 1,
-            y: 6.3,
-            ease: "inOut",
-          });
-        },
-      });
-    }
   });
 
   // Define the final y-position
-  const finalYPosition = -2;
+  const finalYPosition = window.innerWidth > 1000 ? -2 : 1;
+  const finalXPosition = window.innerWidth > 1000 ? -12 : 0;
 
   // Animate the robot's initial movement
   gsap.to(robotPosition, {
     duration: 2,
     y: finalYPosition,
+    x: finalXPosition,
     onUpdate: () => {
       // Update the robot's position during the animation
 
@@ -245,12 +289,11 @@ loader.load("./models/ICT_HI.gltf", (gltf) => {
 
 // Position the camera
 camera.position.z = 0;
+camera.position.y = 0;
 const final = 5;
 
-// Render the scene
 const animate = () => {
   requestAnimationFrame(animate);
-  moon.rotation.y += 0.01;
   if (mixer) {
     mixer.update(0.01); // You can pass a time delta here
   }
@@ -259,9 +302,6 @@ const animate = () => {
   if (camera.position.z < final) {
     camera.position.z += 0.015;
   } else {
-    scene.add(directionalLight);
-
-    scene.remove(light);
   }
 
   renderer.render(scene, camera);

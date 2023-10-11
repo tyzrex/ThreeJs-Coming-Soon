@@ -1,9 +1,22 @@
+/* @import url("./fonts/AILERONS-TYPEFACE.OTF"); */
+/* @font-face {
+  font-family: "Ailerons";
+  src: url("./fonts/AILERONS-TYPEFACE.OTF");
+} */
+@import url("https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&display=swap");
+@import url("./node_modules/font-awesome/css/font-awesome.min.css");
+
 body {
   margin: 0;
   overflow: hidden;
+  /* font-family: "Ailerons", sans-serif; */
+  font-family: "Syncopate", sans-serif;
+  background-color: "#020618";
+  width: screen;
+  height: screen;
 }
 #container {
-  position: absolute;
+  position: relative;
   bottom: 0;
   left: 0;
   right: 0;
@@ -15,17 +28,15 @@ body {
   height: 100%;
 }
 #instructions {
-  font-family: "Courier New", Courier, monospace;
   position: absolute;
   right: 2%;
-  top: 4%;
+  bottom: 4%;
   color: white;
-  font-size: 24px;
+  font-size: 16px;
   text-align: center;
 }
 
 #tactics {
-  font-family: "Courier New", Courier, monospace;
   position: absolute;
   right: 2%;
   bottom: 4%;
@@ -34,68 +45,48 @@ body {
   text-align: center;
 }
 
-#logo {
-  position: absolute;
-  top: 0;
-  left: 2%;
-  z-index: 10;
+.it-logo {
+  width: 120px;
 }
 
 #message {
   position: absolute;
   width: 100%;
   text-align: center;
-  top: 20%;
-  display: none;
-  align-items: center;
-  justify-content: center;
+  top: 8%;
 }
 
-h1 {
-  position: relative;
-  text-align: center;
-  font-family: "Montserrat", Arial, sans-serif;
-  font-size: calc(20px + 3vw);
+.main {
+  font-size: 60px;
   font-weight: 700;
-  color: #fff;
-  letter-spacing: 0.02em;
+  position: relative;
+  letter-spacing: 0px;
   text-transform: uppercase;
-  text-shadow: 0 0 0.15em #1da9cc;
-  user-select: none;
+  font-family: "Syncopate", sans-serif;
+
+  background: -webkit-linear-gradient(
+    -45deg,
+    rgba(255, 76, 216, 1),
+    rgba(93, 67, 253, 1)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-stroke: 3px transparent;
+  color: #000;
   white-space: nowrap;
   filter: blur(0.007em);
   animation: shake 2.5s linear forwards;
 }
 
-h1 span {
+.coming-soon {
+  font-size: 80px;
+  font-weight: 700;
   position: absolute;
-  top: 0;
-  left: 0;
-  transform: translate(-50%, -50%);
-  -webkit-clip-path: polygon(10% 0%, 44% 0%, 70% 100%, 55% 100%);
-  clip-path: polygon(10% 0%, 44% 0%, 70% 100%, 55% 100%);
+  letter-spacing: 0px;
+  text-transform: uppercase;
+  font-family: "Syncopate", sans-serif;
+  color: white;
 }
-
-h1::before,
-h1::after {
-  content: attr(data-text);
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-h1::before {
-  animation: crack1 2.5s linear forwards;
-  -webkit-clip-path: polygon(0% 0%, 10% 0%, 55% 100%, 0% 100%);
-  clip-path: polygon(0% 0%, 10% 0%, 55% 100%, 0% 100%);
-}
-
-h1::after {
-  animation: crack2 2.5s linear forwards;
-  -webkit-clip-path: polygon(44% 0%, 100% 0%, 100% 100%, 70% 100%);
-  clip-path: polygon(44% 0%, 100% 0%, 100% 100%, 70% 100%);
-}
-
 @keyframes shake {
   5%,
   15%,
@@ -169,4 +160,150 @@ h1::after {
   align-items: center;
   justify-content: center;
   color: white;
+}
+
+.container {
+  color: white;
+  text-align: center;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 60%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @media all and (min-width: 1000px) {
+    top: 45%;
+    left: 55%;
+  }
+}
+
+.coming-soon {
+  position: absolute;
+  top: 80%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+
+  @media all and (min-width: 768px) {
+    display: none;
+  }
+}
+
+.countdown {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  text-align: center;
+  width: fit-content;
+}
+
+ul {
+  padding: 0;
+}
+
+li {
+  display: inline-block;
+  font-size: 1.5em;
+  list-style-type: none;
+  padding: 1em;
+  text-transform: uppercase;
+
+  @media all and (max-width: 768px) {
+    font-size: 2.5em;
+  }
+}
+
+li span {
+  display: block;
+  font-size: 4.5rem;
+  font-weight: 700;
+}
+
+@media all and (max-width: 768px) {
+  h1 {
+    font-size: calc(12.5rem);
+  }
+
+  li {
+    font-size: calc(1.125rem);
+  }
+
+  li span {
+    font-size: calc(3.375rem);
+  }
+
+  @media all and (max-width: 768px) {
+    li {
+      font-size: calc(1.125rem);
+    }
+
+    li span {
+      font-size: calc(1.775rem);
+    }
+  }
+}
+
+.ict-logo {
+  width: 200px;
+
+  @media all and (max-width: 768px) {
+    width: 150px;
+  }
+}
+
+.top-nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: #020618;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem;
+  z-index: 1000;
+}
+
+.bottom-nav {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  z-index: 1000;
+}
+
+a {
+  text-decoration: none;
+}
+
+.socials {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  width: 100%;
+
+  @media all and (min-width: 768px) {
+    font-size: 2rem;
+    justify-content: flex-end;
+    gap: 2rem;
+  }
 }
