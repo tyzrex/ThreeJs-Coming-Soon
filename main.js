@@ -25,45 +25,45 @@ t2.fromTo(
   { opacity: 1, duration: 1, delay: 0.5 }
 );
 
-function countdown() {
-  const second = 1000,
-    minute = second * 60,
-    hour = minute * 60,
-    day = hour * 24;
+// function countdown() {
+//   const second = 1000,
+//     minute = second * 60,
+//     hour = minute * 60,
+//     day = hour * 24;
 
-  let today = new Date(),
-    dd = String(today.getDate()).padStart(2, "0"),
-    mm = String(today.getMonth() + 1).padStart(2, "0"),
-    yyyy = today.getFullYear(),
-    nextYear = yyyy + 1,
-    dayMonth = "01/09/",
-    birthday = dayMonth + yyyy;
+//   let today = new Date(),
+//     dd = String(today.getDate()).padStart(2, "0"),
+//     mm = String(today.getMonth() + 1).padStart(2, "0"),
+//     yyyy = today.getFullYear(),
+//     nextYear = yyyy + 1,
+//     dayMonth = "01/09/",
+//     birthday = dayMonth + yyyy;
 
-  today = mm + "/" + dd + "/" + yyyy;
-  if (today > birthday) {
-    birthday = dayMonth + nextYear;
-  }
-  //end
+//   today = mm + "/" + dd + "/" + yyyy;
+//   if (today > birthday) {
+//     birthday = dayMonth + nextYear;
+//   }
+//   //end
 
-  const countDown = new Date(birthday).getTime(),
-    x = setInterval(function () {
-      const now = new Date().getTime(),
-        distance = countDown - now;
+//   const countDown = new Date(birthday).getTime(),
+//     x = setInterval(function () {
+//       const now = new Date().getTime(),
+//         distance = countDown - now;
 
-      (document.getElementById("days").innerText = Math.floor(distance / day)),
-        (document.getElementById("hours").innerText = Math.floor(
-          (distance % day) / hour
-        )),
-        (document.getElementById("minutes").innerText = Math.floor(
-          (distance % hour) / minute
-        )),
-        (document.getElementById("seconds").innerText = Math.floor(
-          (distance % minute) / second
-        ));
-    }, 0);
-}
+//       (document.getElementById("days").innerText = Math.floor(distance / day)),
+//         (document.getElementById("hours").innerText = Math.floor(
+//           (distance % day) / hour
+//         )),
+//         (document.getElementById("minutes").innerText = Math.floor(
+//           (distance % hour) / minute
+//         )),
+//         (document.getElementById("seconds").innerText = Math.floor(
+//           (distance % minute) / second
+//         ));
+//     }, 0);
+// }
 
-countdown();
+// countdown();
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -72,7 +72,8 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   1000
 );
-const renderer = new THREE.WebGLRenderer({ antialias: true });
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setClearColor(0x000000, 0);
 
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.getElementById("container").appendChild(renderer.domElement);
@@ -88,7 +89,8 @@ function onWindowResize() {
 window.addEventListener("resize", onWindowResize, false);
 
 //scene background
-scene.background = new THREE.Color(0x020618);
+// scene.background = new THREE.Color(0x000000);
+// transparent background
 
 const loader = new GLTFLoader();
 // full light
@@ -187,7 +189,7 @@ loader.load("./models/robot.gltf", (gltf) => {
     model2.scale.set(1, 1, 1);
   }
   // Define variables for robot's position, orientation, and velocity
-  const robotPosition = new THREE.Vector3(-12, -20, -10);
+  const robotPosition = new THREE.Vector3(0, -16, -10);
   const robotOrientation = new THREE.Quaternion();
   const robotVelocity = new THREE.Vector3(0, 0, 0);
 
@@ -197,7 +199,7 @@ loader.load("./models/robot.gltf", (gltf) => {
 
   // Define the final y-position
   const finalYPosition = window.innerWidth > 1000 ? -5 : 1;
-  const finalXPosition = window.innerWidth > 1000 ? -14 : 0;
+  const finalXPosition = window.innerWidth > 1000 ? 0 : 0;
 
   // Animate the robot's initial movement
   gsap.to(robotPosition, {
