@@ -2,8 +2,6 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import gsap from "gsap";
 
-const countDown = document.getElementById("countdown");
-
 //animate the countdown
 
 const tl = gsap.timeline({ defaults: { ease: "power1.out" } });
@@ -13,6 +11,16 @@ tl.to(".slider", { y: "-100%", duration: 1.5, delay: 0.5 });
 tl.to(".intro", { y: "-100%", duration: 1 }, "-=1");
 tl.fromTo(
   ".container",
+  { opacity: 0 },
+  { opacity: 1, duration: 1, delay: 0.5 }
+);
+
+const t2 = gsap.timeline({ defaults: { ease: "power1.out" } });
+t2.to(".text2", { y: "0%", duration: 1, stagger: 0.25 });
+t2.to(".slider2", { y: "-100%", duration: 1.5, delay: 0.5 });
+t2.to(".intro2", { y: "-100%", duration: 1 }, "-=1");
+t2.fromTo(
+  ".coming-soon",
   { opacity: 0 },
   { opacity: 1, duration: 1, delay: 0.5 }
 );
@@ -64,7 +72,7 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   1000
 );
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({ antialias: true });
 
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.getElementById("container").appendChild(renderer.domElement);
@@ -107,26 +115,26 @@ let model2;
 let mixer;
 
 // Load your custom GLTF model
-if (window.innerWidth > 1000) {
-  loader.load("./models/coming_soon.gltf", (gltf) => {
-    model = gltf.scene;
+// if (window.innerWidth > 1000) {
+//   loader.load("./models/coming_soon.gltf", (gltf) => {
+//     model = gltf.scene;
 
-    const bbox = new THREE.Box3().setFromObject(model);
-    const center = new THREE.Vector3();
-    scene.add(model);
-    bbox.getCenter(center);
+//     const bbox = new THREE.Box3().setFromObject(model);
+//     const center = new THREE.Vector3();
+//     scene.add(model);
+//     bbox.getCenter(center);
 
-    // Calculate the offset needed to move the model to the center of the scene
-    const offset = new THREE.Vector3();
-    offset.subVectors(scene.position, center);
+//     // Calculate the offset needed to move the model to the center of the scene
+//     const offset = new THREE.Vector3();
+//     offset.subVectors(scene.position, center);
 
-    // Apply the offset to the model's position
-    model.position.add(offset);
+//     // Apply the offset to the model's position
+//     model.position.add(offset);
 
-    //make it a bit down
-    model.position.y = -2;
-  });
-}
+//     //make it a bit down
+//     model.position.y = -2;
+//   });
+// }
 
 const eyeGlowMaterial = new THREE.ShaderMaterial({
   uniforms: {
@@ -172,12 +180,11 @@ loader.load("./models/robot.gltf", (gltf) => {
     mixer.clipAction(clip).play();
   });
 
-  model2.position.set(-18, -7, -10);
   model2.rotation.y = 0;
   if (window.innerWidth > 500) {
-    model2.scale.set(1.2, 1.2, 1.2);
+    model2.scale.set(2.2, 2.2, 2.2);
   } else {
-    model2.scale.set(0.8, 0.8, 0.8);
+    model2.scale.set(1, 1, 1);
   }
   // Define variables for robot's position, orientation, and velocity
   const robotPosition = new THREE.Vector3(-12, -20, -10);
@@ -188,67 +195,9 @@ loader.load("./models/robot.gltf", (gltf) => {
   model2.position.copy(robotPosition);
   model2.setRotationFromQuaternion(robotOrientation);
 
-  document.addEventListener("keydown", (event) => {
-    const robotSpeed = 0.1; // Adjust the speed as needed
-    const resetKey = 32; // Space key
-
-    switch (event.keyCode) {
-      case 87: // W key or Up arrow key
-        // Accelerate the robot forward along its orientation
-        const forwardVector = new THREE.Vector3(0, 1, 0);
-        forwardVector.applyQuaternion(robotOrientation);
-        robotVelocity.add(
-          forwardVector.clone().multiplyScalar(robotSpeed * 0.1)
-        );
-
-        break;
-      case 83: // S key or Down arrow key
-        // Decelerate the robot (apply reverse thrust)
-        const backwardVector = new THREE.Vector3(0, -1, 0);
-        backwardVector.applyQuaternion(robotOrientation);
-        robotVelocity.add(
-          backwardVector.clone().multiplyScalar(robotSpeed * 0.1)
-        ); // Adjust reverse thrust as needed
-        break;
-      case 65: // A key or Left arrow key
-        // Strafe the robot to the left
-        const leftVector = new THREE.Vector3(-0.5, 0, 0);
-        leftVector.applyQuaternion(robotOrientation);
-        robotVelocity.add(leftVector.clone().multiplyScalar(robotSpeed * 0.2));
-        break;
-      case 68: // D key or Right arrow key
-        // Strafe the robot to the right
-        const rightVector = new THREE.Vector3(0.5, 0, 0);
-        rightVector.applyQuaternion(robotOrientation);
-        robotVelocity.add(rightVector.clone().multiplyScalar(robotSpeed * 0.2));
-        break;
-      case resetKey:
-        // Reset robot position, orientation, and velocity to initial values when Space key is pressed
-        gsap.to(robotPosition, {
-          duration: 1,
-          x: -12,
-          y: -2,
-          z: -10,
-          onUpdate: () => {
-            model2.position.copy(robotPosition);
-          },
-          onComplete: () => {
-            robotVelocity.set(0, 0, 0);
-            gsap.to(model2.rotation, {
-              duration: 1,
-              y: 6.3,
-              ease: "inOut",
-            });
-          },
-        });
-
-        break;
-    }
-  });
-
   // Define the final y-position
-  const finalYPosition = window.innerWidth > 1000 ? -2 : 1;
-  const finalXPosition = window.innerWidth > 1000 ? -12 : 0;
+  const finalYPosition = window.innerWidth > 1000 ? -5 : 1;
+  const finalXPosition = window.innerWidth > 1000 ? -14 : 0;
 
   // Animate the robot's initial movement
   gsap.to(robotPosition, {
@@ -268,6 +217,8 @@ loader.load("./models/robot.gltf", (gltf) => {
         ease: "inOut",
       });
     },
+
+    //make the model straight
   });
 
   // Update the robot's position based on velocity in an animation loop

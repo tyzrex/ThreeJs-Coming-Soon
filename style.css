@@ -176,7 +176,7 @@ body {
   justify-content: center;
 
   @media all and (min-width: 1000px) {
-    top: 45%;
+    top: 30%;
     left: 55%;
   }
 }
@@ -195,7 +195,11 @@ body {
   text-align: center;
 
   @media all and (min-width: 768px) {
-    display: none;
+    /* display: none; */
+    font-size: 5rem;
+    top: 50%;
+    left: 60%;
+    letter-spacing: 0.5rem;
   }
 }
 
@@ -302,7 +306,7 @@ a {
   width: 100%;
 
   @media all and (min-width: 768px) {
-    font-size: 2rem;
+    font-size: 24px;
     justify-content: flex-end;
     gap: 2rem;
   }
