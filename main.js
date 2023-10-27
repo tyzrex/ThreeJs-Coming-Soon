@@ -186,7 +186,7 @@ loader.load("./models/robot.gltf", (gltf) => {
   if (window.innerWidth > 500) {
     model2.scale.set(2.2, 2.2, 2.2);
   } else {
-    model2.scale.set(1, 1, 1);
+    model2.scale.set(1.8, 1.8, 1.8);
   }
   // Define variables for robot's position, orientation, and velocity
   const robotPosition = new THREE.Vector3(0, -16, -10);
@@ -198,7 +198,7 @@ loader.load("./models/robot.gltf", (gltf) => {
   model2.setRotationFromQuaternion(robotOrientation);
 
   // Define the final y-position
-  const finalYPosition = window.innerWidth > 1000 ? -5 : 1;
+  const finalYPosition = window.innerWidth > 1000 ? -5 : -3;
   const finalXPosition = window.innerWidth > 1000 ? 0 : 0;
 
   // Animate the robot's initial movement
