@@ -211,14 +211,6 @@ loader.load("./models/robot.gltf", (gltf) => {
 
       model2.position.copy(robotPosition);
     },
-    onComplete: () => {
-      //spinthe full robot once it reaches the final position
-      gsap.to(model2.rotation, {
-        duration: 1,
-        y: 6.3,
-        ease: "inOut",
-      });
-    },
 
     //make the model straight
   });
