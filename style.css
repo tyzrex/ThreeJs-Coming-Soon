@@ -19,6 +19,18 @@ body {
   height: screen;
 }
 
+/* overlay for whole screen */
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  width: 100vw;
+  /* overlay */
+  background: rgba(0, 0, 0, 0.25);
+}
+
 .gif {
   background: url("./animated.gif");
   width: 100%;
@@ -78,6 +90,8 @@ body {
 .it-logo {
   margin-top: 40px;
   width: 400px;
+  padding: 200px;
+  backdrop-filter: blur(40px);
 
   @media all and (max-width: 768px) {
     width: 300px;
