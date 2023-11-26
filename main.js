@@ -198,7 +198,7 @@ loader.load("./models/robot.gltf", (gltf) => {
   model2.setRotationFromQuaternion(robotOrientation);
 
   // Define the final y-position
-  const finalYPosition = window.innerWidth > 1000 ? -5 : -3;
+  const finalYPosition = window.innerWidth > 1000 ? -5 : -5;
   const finalXPosition = window.innerWidth > 1000 ? 0 : 0;
 
   // Animate the robot's initial movement
